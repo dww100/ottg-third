@@ -8,5 +8,5 @@ browser = webdriver.Firefox(service=driver_service)
 # browser = webdriver.Firefox() # Originial Example
 browser.get("http://localhost:8000")
 
-Assert "Congratulations!" in browser.title
+assert "Congratulations!" in browser.title
 print("OK")
