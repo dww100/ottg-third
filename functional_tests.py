@@ -8,12 +8,15 @@ from selenium.webdriver.common.keys import Keys
 class NewVisitorTest(unittest.TestCase):
 
     def setUp(self):
+        
+        try:
+            self.browser = webdriver.Firefox()
+        except Exception as e:
+            # Next 2 lines are needed to specify the path to your geckodriver
+            geckodriver_path = "/snap/bin/geckodriver"
+            driver_service = webdriver.FirefoxService(executable_path=geckodriver_path)
 
-        # Next 2 lines are needed to specify the path to your geckodriver
-        geckodriver_path = "/snap/bin/geckodriver"
-        driver_service = webdriver.FirefoxService(executable_path=geckodriver_path)
-
-        self.browser = webdriver.Firefox(service=driver_service)
+            self.browser = webdriver.Firefox(service=driver_service)
 
     def tearDown(self):
         self.browser.quit()
