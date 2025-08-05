@@ -1,5 +1,5 @@
 from django.test import TestCase
-
+from lists.models import Item
 
 class HomePageTest(TestCase):
 
@@ -16,3 +16,20 @@ class HomePageTest(TestCase):
         response = self.client.post("/", data={"item_text": "A new list item"})
         self.assertContains(response, "A new list item")
         self.assertTemplateUsed(response, "home.html")
+
+class ItemModelTest(TestCase):
+
+    def test_saving_and_retrieving_items(self):
+        item1 = Item()
+        item1.text = "The first (ever) list item"
+        item1.save()
+
+        item2 = Item()
+        item2.text = "Item the second"
+        item2.save()
+
+        saved_items = Item.objects.all()
+        self.assertEqual(saved_items.count(), 2)
+
+        self.assertEqual(saved_items[0].text, "The first (ever) list item")
+        self.assertEqual(saved_items[1].text, "Item the second")
