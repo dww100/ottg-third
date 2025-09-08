@@ -208,6 +208,8 @@ __marimo__/
 
 # Mac things
 .DS_Store
-/static
 
+
+/static
 src/db.sqlite3
+src/static/
