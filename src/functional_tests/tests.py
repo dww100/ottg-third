@@ -1,3 +1,4 @@
+import os
 import time
 
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
@@ -21,6 +22,9 @@ class NewVisitorTest(StaticLiveServerTestCase):
             driver_service = webdriver.FirefoxService(executable_path=geckodriver_path)
 
             self.browser = webdriver.Firefox(service=driver_service)
+
+        if test_server := os.environ.get("TEST_SERVER"):
+            self.live_server_url = f"http://{test_server}"
 
     def tearDown(self):
         self.browser.quit()
