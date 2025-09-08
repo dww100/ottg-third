@@ -207,4 +207,4 @@ marimo/_lsp/
 __marimo__/
 
 # Mac things
-.DS_Store
+.DS_Store/static
