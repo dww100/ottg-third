@@ -214,3 +214,5 @@ __marimo__/
 src/db.sqlite3
 src/static/
 container.db.sqlite3
+
+.ansible
