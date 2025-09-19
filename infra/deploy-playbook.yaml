@@ -4,55 +4,55 @@
 
       - name: Install docker
         ansible.builtin.apt:
-          name: docker.io
-          state: latest
-          update_cache: true
+            name: docker.io
+            state: latest
+            update_cache: true
         become: true
 
       - name: Add our user to docker group, so we can run docker without sudo / become
         ansible.builtin.user:
-          name: "{{ ansible_user }}"
-          groups: docker
-          append: true
+            name: "{{ ansible_user }}"
+            groups: docker
+            append: true
         become: true
 
-      - name: Reset ssh connection to pick up new group membership 
+      - name: Reset ssh connection to pick up new group membership
         ansible.builtin.meta: reset_connection
 
       - name: Build container image locally
         community.docker.docker_image:
-          name: superlists
-          source: build
-          state: present
-          build:
-            path: ..
-            platform: linux/amd64
-          force_source: true
+            name: superlists
+            source: build
+            state: present
+            build:
+                path: ..
+                platform: linux/amd64
+            force_source: true
         delegate_to: 127.0.0.1
 
       - name: Export container image locally
         community.docker.docker_image:
-          name: superlists
-          archive_path: /tmp/superlists-img.tar
-          source: local
+            name: superlists
+            archive_path: /tmp/superlists-img.tar
+            source: local
         delegate_to: 127.0.0.1
 
       - name: Copy container image to server
         ansible.builtin.copy:
-          src: /tmp/superlists-img.tar
-          dest: /tmp/superlists-img.tar
+            src: /tmp/superlists-img.tar
+            dest: /tmp/superlists-img.tar
 
       - name: Import container image on server
         community.docker.docker_image:
-          name: superlists
-          load_path: /tmp/superlists-img.tar
-          source: load
-          force_source: true
-          state: present
+            name: superlists
+            load_path: /tmp/superlists-img.tar
+            source: load
+            force_source: true
+            state: present
 
       - name: Run container
         community.docker.docker_container:
-          name: superlists
-          image: superlists
-          state: started
-          recreate: true
+            name: superlists
+            image: superlists
+            state: started
+            recreate: true
