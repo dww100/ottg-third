@@ -1,0 +1,29 @@
+- hosts: all
+
+  tasks:
+
+      - name: Install docker
+        ansible.builtin.apt:
+          name: docker.io
+          state: latest
+          update_cache: true
+        become: true
+
+      - name: Add our user to docker group, so we can run docker without sudo / become
+        ansible.builtin.user:
+          name: "{{ ansible_user }}"
+          groups: docker
+          append: true
+        become: true
+
+      - name: Reset ssh connection to pick up new group membership 
+        ansible.builtin.meta: reset_connection
+
+      - name: Run test container
+        community.docker.docker_container:
+          name: testcontainer
+          state: started 
+          image: busybox
+          command: echo hello world
+        become: true
+
