@@ -3,6 +3,7 @@ from django import forms
 from lists.models import Item
 
 EMPTY_ITEM_ERROR = "You can't have an empty list item"
+DUPLICATE_ITEM_ERROR = "You've already got this in your list"
 
 
 class ItemForm(forms.models.ModelForm):
@@ -24,3 +25,14 @@ class ItemForm(forms.models.ModelForm):
     def save(self, for_list):
         self.instance.list = for_list
         return super().save()
+
+class ExistingListItemForm(ItemForm):
+    def __init__(self, for_list, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.instance.list = for_list
+
+    def clean_text(self):
+        text = self.cleaned_data['text']
+        if Item.objects.filter(list=self.instance.list, text=text).exists():
+            raise forms.ValidationError(DUPLICATE_ITEM_ERROR)
+        return text
