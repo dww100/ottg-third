@@ -14,7 +14,7 @@ class ItemForm(forms.models.ModelForm):
             "text": forms.widgets.TextInput(
                 attrs={
                     'placeholder': 'Enter a to-do item',
-                    'class': 'form-control input-lg',
+                    'class': 'form-control form-control-lg',
                 }
             ),
         }
@@ -22,9 +22,16 @@ class ItemForm(forms.models.ModelForm):
             "text": {"required": EMPTY_ITEM_ERROR},
         }
 
+    def is_valid(self):
+        result = super().is_valid()
+        if not result:
+            self.fields['text'].widget.attrs["class"] += " is-invalid"
+        return result
+
     def save(self, for_list):
         self.instance.list = for_list
         return super().save()
+
 
 class ExistingListItemForm(ItemForm):
     def __init__(self, for_list, *args, **kwargs):
@@ -36,3 +43,6 @@ class ExistingListItemForm(ItemForm):
         if Item.objects.filter(list=self.instance.list, text=text).exists():
             raise forms.ValidationError(DUPLICATE_ITEM_ERROR)
         return text
+
+    def save(self):
+        return forms.models.ModelForm.save(self)
