@@ -1,10 +1,9 @@
 console.log('Loading lists.js');
 
-const initialize = (inputSelector, errorSelector) => {
-    console.log('initialize called');
+const initialize = (inputSelector) => {
+    // console.log('initialize called');
     const textInput = document.querySelector(inputSelector);
     textInput.oninput = () => {
-        const errorMsg = document.querySelector(errorSelector);
-        errorMsg.style.display = 'none';
+        textInput.classList.remove('is-invalid');
     };
 };
